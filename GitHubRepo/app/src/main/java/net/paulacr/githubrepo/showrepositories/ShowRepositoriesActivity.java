@@ -1,4 +1,4 @@
-package net.paulacr.githubrepo;
+package net.paulacr.githubrepo.showrepositories;
 
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -13,13 +13,20 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
-public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+import net.paulacr.githubrepo.R;
+import net.paulacr.githubrepo.data.Repository;
+
+import java.util.List;
+
+public class ShowRepositoriesActivity extends AppCompatActivity
+        implements NavigationView.OnNavigationItemSelectedListener, ShowRepositoriesContract.View {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -40,6 +47,14 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+
+
+
+        //create the presenter or start service for request
+        ShowRepositoriesPresenter presenter = new ShowRepositoriesPresenter(this);
+        //presenter.searchRepositories();
+
     }
 
     @Override
@@ -97,5 +112,29 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void setupViews() {
+
+    }
+
+    @Override
+    public void showRepositories(List<Repository> repositories) {
+        //Create the adapter and pass the repositories list
+    }
+
+    @Override
+    public void showError(String error) {
+
+    }
+
+    @Override
+    public void showLoadingView(boolean show) {
+
+    }
+
+    @Override
+    public void retry() {
+
     }
 }

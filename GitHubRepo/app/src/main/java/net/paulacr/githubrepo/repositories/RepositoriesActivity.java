@@ -26,7 +26,8 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 
 public class RepositoriesActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, RepositoriesContract.View {
+        implements NavigationView.OnNavigationItemSelectedListener, RepositoriesContract.View,
+                    OnScrollMore {
 
     //**************************************************************************
     // Bind Views
@@ -44,7 +45,10 @@ public class RepositoriesActivity extends AppCompatActivity
 
     private List<Item> itemList;
     private RepositoriesAdapter adapter;
-    ProgressDialog progressBar;
+    private ProgressDialog progressBar;
+    private int initialPage = 1;
+    private boolean hasMorePages;
+    private RepositoriesPresenter presenter;
 
     //**************************************************************************
     // LifeCycle
@@ -60,9 +64,9 @@ public class RepositoriesActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         //create the presenter or start service for request
-        RepositoriesPresenter presenter = new RepositoriesPresenter(this);
+        presenter = new RepositoriesPresenter(this);
         showLoadingView(true);
-        presenter.searchRepositories("", 1);
+        presenter.searchRepositories(initialPage);
 
     }
 
@@ -115,10 +119,14 @@ public class RepositoriesActivity extends AppCompatActivity
 
     private void createRepositoryList() {
         itemList = new ArrayList<>();
+
         LinearLayoutManager manager = new LinearLayoutManager(this);
+        OnScrollMoreListener endlessScroll = new OnScrollMoreListener(manager);
+        endlessScroll.setListener(this);
 
         adapter = new RepositoriesAdapter(this, itemList);
         repositoryList.setLayoutManager(manager);
+        repositoryList.addOnScrollListener(endlessScroll);
         repositoryList.setAdapter(adapter);
     }
 
@@ -138,10 +146,12 @@ public class RepositoriesActivity extends AppCompatActivity
     //**************************************************************************
 
     @Override
-    public void showRepositories(List<Item> repositories) {
-        //Create the adapter and pass the repositories list
-        itemList.addAll(repositories);
-        adapter.notifyDataSetChanged();
+    public void showRepositories(Repositories repositories) {
+
+
+        itemList.addAll(repositories.getItems());
+        adapter.notifyItemRangeChanged(adapter.getItemCount(), itemList.size() - 1);
+        setMorePages(repositories);
     }
 
     @Override
@@ -167,5 +177,30 @@ public class RepositoriesActivity extends AppCompatActivity
     @Override
     public void retry() {
 
+    }
+
+    //**************************************************************************
+    // Pages Control
+    //**************************************************************************
+
+    private boolean hasMorePages() {
+        return hasMorePages;
+    }
+
+    private void setMorePages(Repositories repositories) {
+        if(repositories.getTotalCount() != repositories.getItems().size() ||
+                repositories.getItems() != null) {
+            hasMorePages = true;
+        } else {
+            hasMorePages = false;
+        }
+
+    }
+
+    @Override
+    public void onScrollMorePages(int page) {
+        if(hasMorePages()) {
+            presenter.searchRepositories(page);
+        }
     }
 }

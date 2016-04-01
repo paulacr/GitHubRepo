@@ -16,7 +16,7 @@ public interface RepositoriesContract {
 
     interface View {
 
-        void showRepositories(List<Item> repositories);
+        void showRepositories(Repositories repositories);
         void showError(String error);
         void showLoadingView(boolean show);
         void retry();
@@ -24,7 +24,7 @@ public interface RepositoriesContract {
     }
 
     interface Presenter {
-        void searchRepositories(String language, int page);
+        void searchRepositories(int page);
         boolean verifyNetworkConnection();
     }
 }

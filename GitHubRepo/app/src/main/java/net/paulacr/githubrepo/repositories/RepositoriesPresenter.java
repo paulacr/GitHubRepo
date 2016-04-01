@@ -1,5 +1,14 @@
 package net.paulacr.githubrepo.repositories;
 
+import net.paulacr.githubrepo.data.Repositories;
+import net.paulacr.githubrepo.network.RestApi;
+
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 /**
  * Created by paularosa on 3/31/16.
  */
@@ -14,8 +23,22 @@ public class RepositoriesPresenter implements RepositoriesContract.Presenter {
 
     @Override
     public void searchRepositories(String language, int page) {
-        //call for retrofit
 
+        Call<Repositories> service = RestApi.getClient().getRepository("language:java", "stars", "1");
+        service.enqueue(new Callback<Repositories>() {
+            @Override
+            public void onResponse(Call<Repositories> call, Response<Repositories> response) {
+                view.showRepositories(response.body().getItems());
+                view.showLoadingView(false);
+            }
+
+            @Override
+            public void onFailure(Call<Repositories> call, Throwable t) {
+                view.showLoadingView(false);
+                view.showError(t.getMessage());
+
+            }
+        });
         //onsuccess call
         //view.showRepositories(repo);
         //view.showError(error);

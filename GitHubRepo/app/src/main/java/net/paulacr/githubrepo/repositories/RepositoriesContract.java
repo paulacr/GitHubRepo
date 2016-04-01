@@ -1,5 +1,6 @@
 package net.paulacr.githubrepo.repositories;
 
+import net.paulacr.githubrepo.data.Item;
 import net.paulacr.githubrepo.data.Repositories;
 
 import java.util.List;
@@ -15,7 +16,7 @@ public interface RepositoriesContract {
 
     interface View {
 
-        void showRepositories(List<Repositories> repositories);
+        void showRepositories(List<Item> repositories);
         void showError(String error);
         void showLoadingView(boolean show);
         void retry();

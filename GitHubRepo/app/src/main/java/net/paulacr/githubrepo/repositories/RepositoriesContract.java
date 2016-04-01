@@ -1,4 +1,4 @@
-package net.paulacr.githubrepo.showrepositories;
+package net.paulacr.githubrepo.repositories;
 
 import net.paulacr.githubrepo.data.Repositories;
 
@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * Created by paularosa on 3/31/16.
  */
-public interface ShowRepositoriesContract {
+public interface RepositoriesContract {
 
     /**
      * The contract for view and presenter

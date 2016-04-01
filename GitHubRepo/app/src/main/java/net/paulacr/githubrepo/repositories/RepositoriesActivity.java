@@ -1,8 +1,10 @@
-package net.paulacr.githubrepo.showrepositories;
+package net.paulacr.githubrepo.repositories;
 
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -14,12 +16,18 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import net.paulacr.githubrepo.R;
+import net.paulacr.githubrepo.data.Item;
 import net.paulacr.githubrepo.data.Repositories;
 
 import java.util.List;
 
-public class ShowRepositoriesActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, ShowRepositoriesContract.View {
+import butterknife.Bind;
+
+public class RepositoriesActivity extends AppCompatActivity
+        implements NavigationView.OnNavigationItemSelectedListener, RepositoriesContract.View {
+
+    @Bind(R.id.listRepo)
+    RecyclerView repositoryList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,7 +60,7 @@ public class ShowRepositoriesActivity extends AppCompatActivity
 
 
         //create the presenter or start service for request
-        ShowRepositoriesPresenter presenter = new ShowRepositoriesPresenter(this);
+        RepositoriesPresenter presenter = new RepositoriesPresenter(this);
         //presenter.searchRepositories();
 
     }
@@ -76,12 +84,7 @@ public class ShowRepositoriesActivity extends AppCompatActivity
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
         }
@@ -95,20 +98,6 @@ public class ShowRepositoriesActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
-
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
-        }
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
@@ -116,6 +105,14 @@ public class ShowRepositoriesActivity extends AppCompatActivity
 
     private void setupViews() {
 
+    }
+
+    private void createRepositoryList(List<Item> items) {
+        LinearLayoutManager manager = new LinearLayoutManager(this);
+        RepositoriesAdapter adapter = new RepositoriesAdapter(this, items);
+
+        repositoryList.setLayoutManager(manager);
+        repositoryList.setAdapter(adapter);
     }
 
     @Override

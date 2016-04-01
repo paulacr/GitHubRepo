@@ -1,13 +1,13 @@
-package net.paulacr.githubrepo.showrepositories;
+package net.paulacr.githubrepo.repositories;
 
 /**
  * Created by paularosa on 3/31/16.
  */
-public class ShowRepositoriesPresenter implements ShowRepositoriesContract.Presenter {
+public class RepositoriesPresenter implements RepositoriesContract.Presenter {
 
-    private ShowRepositoriesContract.View view;
+    private RepositoriesContract.View view;
 
-    public ShowRepositoriesPresenter(ShowRepositoriesContract.View view) {
+    public RepositoriesPresenter(RepositoriesContract.View view) {
         this.view = view;
     }
 

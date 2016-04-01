@@ -29,5 +29,8 @@ dependencies {
     compile ('com.squareup.retrofit2:retrofit:2.0.0-beta4') {
         exclude module: 'okhttp'
     }
+    compile 'com.jakewharton:butterknife:7.0.1'
+    compile 'de.hdodenhof:circleimageview:2.0.0'
+    compile 'com.squareup.picasso:picasso:2.5.2'
 
 }

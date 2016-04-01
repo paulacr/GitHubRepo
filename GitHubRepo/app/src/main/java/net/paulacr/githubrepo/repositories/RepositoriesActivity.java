@@ -1,5 +1,6 @@
 package net.paulacr.githubrepo.repositories;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.ActionBar;
@@ -12,11 +13,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ProgressBar;
 
 import net.paulacr.githubrepo.R;
 import net.paulacr.githubrepo.data.Item;
 import net.paulacr.githubrepo.data.Repositories;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
@@ -39,6 +42,10 @@ public class RepositoriesActivity extends AppCompatActivity
     @Bind(R.id.nav_view)
     NavigationView navigationView;
 
+    private List<Item> itemList;
+    private RepositoriesAdapter adapter;
+    ProgressDialog progressBar;
+
     //**************************************************************************
     // LifeCycle
     //**************************************************************************
@@ -54,7 +61,8 @@ public class RepositoriesActivity extends AppCompatActivity
 
         //create the presenter or start service for request
         RepositoriesPresenter presenter = new RepositoriesPresenter(this);
-        //presenter.searchRepositories();
+        showLoadingView(true);
+        presenter.searchRepositories("", 1);
 
     }
 
@@ -91,6 +99,7 @@ public class RepositoriesActivity extends AppCompatActivity
     private void setupViews() {
         setupToolBar();
         setupActionBar();
+        createRepositoryList();
 
     }
 
@@ -104,10 +113,11 @@ public class RepositoriesActivity extends AppCompatActivity
         ab.setDisplayHomeAsUpEnabled(true);
     }
 
-    private void createRepositoryList(List<Item> items) {
+    private void createRepositoryList() {
+        itemList = new ArrayList<>();
         LinearLayoutManager manager = new LinearLayoutManager(this);
-        RepositoriesAdapter adapter = new RepositoriesAdapter(this, items);
 
+        adapter = new RepositoriesAdapter(this, itemList);
         repositoryList.setLayoutManager(manager);
         repositoryList.setAdapter(adapter);
     }
@@ -128,8 +138,10 @@ public class RepositoriesActivity extends AppCompatActivity
     //**************************************************************************
 
     @Override
-    public void showRepositories(List<Repositories> repositories) {
+    public void showRepositories(List<Item> repositories) {
         //Create the adapter and pass the repositories list
+        itemList.addAll(repositories);
+        adapter.notifyDataSetChanged();
     }
 
     @Override
@@ -139,7 +151,17 @@ public class RepositoriesActivity extends AppCompatActivity
 
     @Override
     public void showLoadingView(boolean show) {
+        if(progressBar == null) {
+            progressBar = new ProgressDialog(this);
+        }
 
+        if(show) {
+            progressBar.setTitle("Please Wait");
+            progressBar.setMessage("Searching for repositories");
+            progressBar.show();
+        } else {
+            progressBar.dismiss();
+        }
     }
 
     @Override

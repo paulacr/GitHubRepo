@@ -2,6 +2,8 @@ package net.paulacr.githubrepo.data;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.List;
+
 /**
  * Created by paularosa on 3/31/16.
  */
@@ -12,7 +14,7 @@ public class Repositories {
     @SerializedName("incomplete_results")
     boolean isIncompleteResults;
     @SerializedName("items")
-    private Item items;
+    private List<Item> items;
 
 
     public long getTotalCount() {
@@ -31,11 +33,11 @@ public class Repositories {
         isIncompleteResults = incompleteResults;
     }
 
-    public Item getItems() {
+    public List<Item> getItems() {
         return items;
     }
 
-    public void setItems(Item items) {
+    public void setItems(List<Item> items) {
         this.items = items;
     }
 }

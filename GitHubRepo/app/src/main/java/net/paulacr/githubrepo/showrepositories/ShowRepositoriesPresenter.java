@@ -1,9 +1,5 @@
 package net.paulacr.githubrepo.showrepositories;
 
-import net.paulacr.githubrepo.data.Repository;
-
-import java.util.List;
-
 /**
  * Created by paularosa on 3/31/16.
  */

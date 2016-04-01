@@ -14,7 +14,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import net.paulacr.githubrepo.R;
-import net.paulacr.githubrepo.data.Repository;
+import net.paulacr.githubrepo.data.Repositories;
 
 import java.util.List;
 
@@ -119,7 +119,7 @@ public class ShowRepositoriesActivity extends AppCompatActivity
     }
 
     @Override
-    public void showRepositories(List<Repository> repositories) {
+    public void showRepositories(List<Repositories> repositories) {
         //Create the adapter and pass the repositories list
     }
 

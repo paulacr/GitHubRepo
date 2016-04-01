@@ -2,9 +2,6 @@ package net.paulacr.githubrepo.repositories;
 
 import net.paulacr.githubrepo.data.Repositories;
 import net.paulacr.githubrepo.network.RestApi;
-
-import java.util.List;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -20,15 +17,19 @@ public class RepositoriesPresenter implements RepositoriesContract.Presenter {
         this.view = view;
     }
 
-
     @Override
-    public void searchRepositories(String language, int page) {
+    public void searchRepositories(int page) {
 
-        Call<Repositories> service = RestApi.getClient().getRepository("language:java", "stars", "1");
+        String currentPage = String.valueOf(page);
+
+        view.showLoadingView(true);
+        Call<Repositories> service = RestApi.getClient().getRepository("language:java", "stars", currentPage);
         service.enqueue(new Callback<Repositories>() {
             @Override
             public void onResponse(Call<Repositories> call, Response<Repositories> response) {
-                view.showRepositories(response.body().getItems());
+                if(response.body().getItems() != null) {
+                    view.showRepositories(response.body());
+                }
                 view.showLoadingView(false);
             }
 
@@ -36,18 +37,12 @@ public class RepositoriesPresenter implements RepositoriesContract.Presenter {
             public void onFailure(Call<Repositories> call, Throwable t) {
                 view.showLoadingView(false);
                 view.showError(t.getMessage());
-
             }
         });
-        //onsuccess call
-        //view.showRepositories(repo);
-        //view.showError(error);
     }
 
     @Override
     public boolean verifyNetworkConnection() {
         return false;
     }
-
-
 }

@@ -1,6 +1,6 @@
 package net.paulacr.githubrepo.showpullrequests;
 
-import net.paulacr.githubrepo.data.Repository;
+import net.paulacr.githubrepo.data.Repositories;
 
 import java.util.List;
 
@@ -10,7 +10,7 @@ import java.util.List;
 public interface ShowPullRequestContract {
 
     interface View {
-        void showPullRequests(List<Repository> repositories);
+        void showPullRequests(List<Repositories> repositories);
         void showError(String error);
         void showLoadingView(boolean show);
         void retry();

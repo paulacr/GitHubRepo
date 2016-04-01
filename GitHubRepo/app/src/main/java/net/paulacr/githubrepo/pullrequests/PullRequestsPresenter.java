@@ -1,13 +1,13 @@
-package net.paulacr.githubrepo.showpullrequests;
+package net.paulacr.githubrepo.pullrequests;
 
 /**
  * Created by paularosa on 3/31/16.
  */
-public class ShowPullRequestsPresenter implements ShowPullRequestContract.Presenter {
+public class PullRequestsPresenter implements PullRequestContract.Presenter {
 
-    private ShowPullRequestContract.View view;
+    private PullRequestContract.View view;
 
-    public ShowPullRequestsPresenter(ShowPullRequestContract.View view) {
+    public PullRequestsPresenter(PullRequestContract.View view) {
         this.view = view;
     }
 

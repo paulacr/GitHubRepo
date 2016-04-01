@@ -1,4 +1,4 @@
-package net.paulacr.githubrepo.showpullrequests;
+package net.paulacr.githubrepo.pullrequests;
 
 import net.paulacr.githubrepo.data.Repositories;
 
@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * Created by paularosa on 3/31/16.
  */
-public interface ShowPullRequestContract {
+public interface PullRequestContract {
 
     interface View {
         void showPullRequests(List<Repositories> repositories);

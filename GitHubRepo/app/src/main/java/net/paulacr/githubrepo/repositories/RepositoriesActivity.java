@@ -2,14 +2,12 @@ package net.paulacr.githubrepo.repositories;
 
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
+import android.support.v7.app.ActionBar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -22,47 +20,58 @@ import net.paulacr.githubrepo.data.Repositories;
 import java.util.List;
 
 import butterknife.Bind;
+import butterknife.ButterKnife;
 
 public class RepositoriesActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, RepositoriesContract.View {
 
+    //**************************************************************************
+    // Bind Views
+    //**************************************************************************
     @Bind(R.id.listRepo)
     RecyclerView repositoryList;
+    @Bind(R.id.toolbar)
+    Toolbar toolbar;
+    @Bind(R.id.fab)
+    FloatingActionButton fab;
+    @Bind(R.id.drawer_layout)
+    DrawerLayout drawerLayout;
+    @Bind(R.id.nav_view)
+    NavigationView navigationView;
+
+    //**************************************************************************
+    // LifeCycle
+    //**************************************************************************
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.repositories_activity);
 
-
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
-        toggle.syncState();
-
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        ButterKnife.bind(this);
+        setupViews();
         navigationView.setNavigationItemSelectedListener(this);
-
-
-
 
         //create the presenter or start service for request
         RepositoriesPresenter presenter = new RepositoriesPresenter(this);
         //presenter.searchRepositories();
 
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                drawerLayout.openDrawer(GravityCompat.START);
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -75,21 +84,32 @@ public class RepositoriesActivity extends AppCompatActivity
         }
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
+    //**************************************************************************
+    // Setup Views
+    //**************************************************************************
+
+    private void setupViews() {
+        setupToolBar();
+        setupActionBar();
+
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (id == R.id.action_settings) {
-            return true;
-        }
+    private void setupToolBar() {
+        setSupportActionBar(toolbar);
+    }
 
-        return super.onOptionsItemSelected(item);
+    private void setupActionBar() {
+        final ActionBar ab = getSupportActionBar();
+        ab.setHomeAsUpIndicator(R.drawable.ic_drawer);
+        ab.setDisplayHomeAsUpEnabled(true);
+    }
+
+    private void createRepositoryList(List<Item> items) {
+        LinearLayoutManager manager = new LinearLayoutManager(this);
+        RepositoriesAdapter adapter = new RepositoriesAdapter(this, items);
+
+        repositoryList.setLayoutManager(manager);
+        repositoryList.setAdapter(adapter);
     }
 
     @SuppressWarnings("StatementWithEmptyBody")
@@ -103,17 +123,9 @@ public class RepositoriesActivity extends AppCompatActivity
         return true;
     }
 
-    private void setupViews() {
-
-    }
-
-    private void createRepositoryList(List<Item> items) {
-        LinearLayoutManager manager = new LinearLayoutManager(this);
-        RepositoriesAdapter adapter = new RepositoriesAdapter(this, items);
-
-        repositoryList.setLayoutManager(manager);
-        repositoryList.setAdapter(adapter);
-    }
+    //**************************************************************************
+    // Ui methods
+    //**************************************************************************
 
     @Override
     public void showRepositories(List<Repositories> repositories) {

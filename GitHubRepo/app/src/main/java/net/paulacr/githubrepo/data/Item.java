@@ -5,12 +5,14 @@ import com.google.gson.annotations.SerializedName;
 /**
  * Created by paularosa on 3/31/16.
  */
-public class Items {
+public class Item {
 
     @SerializedName("id")
     private long id;
     @SerializedName("name")
     private String name;
+    @SerializedName("description")
+    private String description;
     @SerializedName("forks_count")
     private long forksCount;
     @SerializedName("stargazers_count")
@@ -56,5 +58,13 @@ public class Items {
 
     public void setStarsCount(long starsCount) {
         this.starsCount = starsCount;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

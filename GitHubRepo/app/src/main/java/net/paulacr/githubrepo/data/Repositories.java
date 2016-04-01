@@ -12,7 +12,7 @@ public class Repositories {
     @SerializedName("incomplete_results")
     boolean isIncompleteResults;
     @SerializedName("items")
-    private Items items;
+    private Item items;
 
 
     public long getTotalCount() {
@@ -31,11 +31,11 @@ public class Repositories {
         isIncompleteResults = incompleteResults;
     }
 
-    public Items getItems() {
+    public Item getItems() {
         return items;
     }
 
-    public void setItems(Items items) {
+    public void setItems(Item items) {
         this.items = items;
     }
 }

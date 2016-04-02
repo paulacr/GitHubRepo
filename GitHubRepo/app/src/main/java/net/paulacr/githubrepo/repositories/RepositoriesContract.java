@@ -1,5 +1,7 @@
 package net.paulacr.githubrepo.repositories;
 
+import android.support.v4.app.Fragment;
+
 import net.paulacr.githubrepo.data.Item;
 import net.paulacr.githubrepo.data.Repositories;
 
@@ -20,6 +22,7 @@ public interface RepositoriesContract {
         void showError(String error);
         void showLoadingView(boolean show);
         void retry();
+        void changeFragment(Fragment fragment, String TAG);
 
     }
 

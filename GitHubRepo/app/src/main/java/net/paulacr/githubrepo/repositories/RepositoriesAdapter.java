@@ -11,6 +11,7 @@ import com.squareup.picasso.Picasso;
 
 import net.paulacr.githubrepo.R;
 import net.paulacr.githubrepo.data.Item;
+import net.paulacr.githubrepo.utils.OnListItemClick;
 
 import java.util.List;
 
@@ -25,13 +26,14 @@ public class RepositoriesAdapter extends RecyclerView.Adapter<RepositoriesAdapte
 
     private List<Item> itemList;
     private Context context;
+    private OnListItemClick clickListener;
 
     public RepositoriesAdapter(Context context, List<Item> items) {
         this.context = context;
         this.itemList = items;
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         @Bind(R.id.repoName)
         TextView repoName;
@@ -49,6 +51,12 @@ public class RepositoriesAdapter extends RecyclerView.Adapter<RepositoriesAdapte
         public ViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
+            itemView.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View v) {
+            clickListener.onListItemClicked(getAdapterPosition());
         }
     }
 
@@ -79,6 +87,14 @@ public class RepositoriesAdapter extends RecyclerView.Adapter<RepositoriesAdapte
     @Override
     public int getItemCount() {
         return itemList.size();
+    }
+
+    //**************************************************************************
+    // Set Listeners
+    //**************************************************************************
+
+    public void setClickListener(OnListItemClick listener) {
+        this.clickListener = listener;
     }
 
 }

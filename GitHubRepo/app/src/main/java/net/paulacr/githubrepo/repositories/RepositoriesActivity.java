@@ -1,8 +1,11 @@
 package net.paulacr.githubrepo.repositories;
 
+import android.app.Fragment;
 import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -11,13 +14,18 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ProgressBar;
 
 import net.paulacr.githubrepo.R;
 import net.paulacr.githubrepo.data.Item;
+import net.paulacr.githubrepo.data.PullRequests;
 import net.paulacr.githubrepo.data.Repositories;
+import net.paulacr.githubrepo.data.RepositoriesList;
+import net.paulacr.githubrepo.pullrequests.PullRequestsFragment;
+import net.paulacr.githubrepo.utils.OnListItemClick;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +35,14 @@ import butterknife.ButterKnife;
 
 public class RepositoriesActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, RepositoriesContract.View,
-                    OnScrollMore {
+                    OnScrollMore, OnListItemClick {
+
+    private List<Item> itemList;
+    private RepositoriesAdapter adapter;
+    private ProgressDialog progressBar;
+    private int initialPage = 1;
+    private boolean hasMorePages;
+    private RepositoriesPresenter presenter;
 
     //**************************************************************************
     // Bind Views
@@ -42,13 +57,6 @@ public class RepositoriesActivity extends AppCompatActivity
     DrawerLayout drawerLayout;
     @Bind(R.id.nav_view)
     NavigationView navigationView;
-
-    private List<Item> itemList;
-    private RepositoriesAdapter adapter;
-    private ProgressDialog progressBar;
-    private int initialPage = 1;
-    private boolean hasMorePages;
-    private RepositoriesPresenter presenter;
 
     //**************************************************************************
     // LifeCycle
@@ -125,6 +133,8 @@ public class RepositoriesActivity extends AppCompatActivity
         endlessScroll.setListener(this);
 
         adapter = new RepositoriesAdapter(this, itemList);
+        adapter.setClickListener(this);
+
         repositoryList.setLayoutManager(manager);
         repositoryList.addOnScrollListener(endlessScroll);
         repositoryList.setAdapter(adapter);
@@ -148,7 +158,9 @@ public class RepositoriesActivity extends AppCompatActivity
     @Override
     public void showRepositories(Repositories repositories) {
 
+        RepositoriesList.getInstance().setRepositories(repositories);
 
+        //Populate the items
         itemList.addAll(repositories.getItems());
         adapter.notifyItemRangeChanged(adapter.getItemCount(), itemList.size() - 1);
         setMorePages(repositories);
@@ -179,6 +191,17 @@ public class RepositoriesActivity extends AppCompatActivity
 
     }
 
+    @Override
+    public void changeFragment(android.support.v4.app.Fragment fragment, String TAG) {
+
+        FragmentManager manager = getSupportFragmentManager();
+        FragmentTransaction transaction = manager.beginTransaction();
+        transaction.add(R.id.container, fragment, TAG);
+        transaction.addToBackStack(TAG);
+        transaction.commit();
+    }
+
+
     //**************************************************************************
     // Pages Control
     //**************************************************************************
@@ -202,5 +225,19 @@ public class RepositoriesActivity extends AppCompatActivity
         if(hasMorePages()) {
             presenter.searchRepositories(page);
         }
+    }
+
+    @Override
+    public void onListItemClicked(int position) {
+
+        Item item = RepositoriesList.getInstance().getRepositories().getItems().get(position);
+
+        String userName = item.getOwner().getLogin();
+        String repoName = item.getName();
+
+        PullRequestsFragment fragment = PullRequestsFragment.newInstance(userName, repoName);
+        String tag = PullRequestsFragment.TAG;
+
+        changeFragment(fragment, tag);
     }
 }

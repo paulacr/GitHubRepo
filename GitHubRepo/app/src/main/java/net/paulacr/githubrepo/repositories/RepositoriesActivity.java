@@ -88,7 +88,7 @@ public class RepositoriesActivity extends AppCompatActivity
             presenter.searchRepositories(initialPage);
         } else {
             showLoadingView(false);
-            generateSnackBar("network connection error", "try again");
+            generateSnackBar(getString(R.string.error_network_connection), getString(R.string.action_try_again));
         }
 
     }
@@ -209,7 +209,7 @@ public class RepositoriesActivity extends AppCompatActivity
 
     @Override
     public void showError(String error) {
-        generateSnackBar(error, "Retry");
+        generateSnackBar(getString(R.string.error_request), getString(R.string.action_try_again));
         hasRequestError = true;
     }
 
@@ -220,8 +220,8 @@ public class RepositoriesActivity extends AppCompatActivity
         }
 
         if(show) {
-            progressBar.setTitle("Please Wait");
-            progressBar.setMessage("Searching for repositories");
+            progressBar.setTitle(getString(R.string.dialog_title));
+            progressBar.setMessage(getString(R.string.dialog_message));
             progressBar.show();
         } else {
             progressBar.dismiss();
@@ -234,7 +234,7 @@ public class RepositoriesActivity extends AppCompatActivity
             presenter.searchRepositories(getPage());
         } else {
             showLoadingView(false);
-            generateSnackBar("network connection error", "try again");
+            generateSnackBar(getString(R.string.error_network_connection),getString(R.string.action_try_again));
         }
 
     }

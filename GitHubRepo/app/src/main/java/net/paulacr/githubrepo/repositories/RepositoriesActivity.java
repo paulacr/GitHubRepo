@@ -28,6 +28,7 @@ import net.paulacr.githubrepo.data.Item;
 import net.paulacr.githubrepo.data.Repositories;
 import net.paulacr.githubrepo.data.RepositoriesList;
 import net.paulacr.githubrepo.pullrequests.PullRequestsFragment;
+import net.paulacr.githubrepo.utils.DividerItemDecorator;
 import net.paulacr.githubrepo.utils.NetworkConnectionReceiver;
 import net.paulacr.githubrepo.utils.NetworkConnectionVerifier;
 import net.paulacr.githubrepo.utils.OnListItemClick;
@@ -167,6 +168,7 @@ public class RepositoriesActivity extends AppCompatActivity
 
         repositoryList.setLayoutManager(manager);
         repositoryList.addOnScrollListener(endlessScroll);
+        repositoryList.addItemDecoration(new DividerItemDecorator(this, DividerItemDecorator.VERTICAL_LIST));
         repositoryList.setAdapter(adapter);
     }
 

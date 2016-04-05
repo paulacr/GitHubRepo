@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import net.paulacr.githubrepo.R;
 import net.paulacr.githubrepo.data.PullRequests;
 import net.paulacr.githubrepo.data.Repositories;
+import net.paulacr.githubrepo.utils.DividerItemDecorator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -112,6 +113,7 @@ public class PullRequestsFragment extends Fragment implements PullRequestContrac
         adapter = new PullRequestsAdapter(getActivity(), pullRequestsItems);
 
         listPullRequest.setLayoutManager(manager);
+        listPullRequest.addItemDecoration(new DividerItemDecorator(getActivity(), DividerItemDecorator.VERTICAL_LIST));
         listPullRequest.setAdapter(adapter);
     }
 

@@ -5,4 +5,11 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <string name="action_settings">Settings</string>
+
+    <string name="error_network_connection">Error connecting to the internet</string>
+    <string name="error_request">Error connecting to the server</string>
+    <string name="action_try_again">Try again</string>
+
+    <string name="dialog_title">Please wait...</string>
+    <string name="dialog_message">Searching for repositories</string>
 </resources>

@@ -1,20 +1,28 @@
 apply plugin: 'com.android.application'
 
 android {
+    signingConfigs {
+        release {
+            keyAlias 'github'
+            keyPassword 'gitapp'
+            storeFile file('/Users/paularosa/Documents/Development/Apps/Keystores/GitHubRepo/keystore.jks')
+            storePassword 'githubrepomyapp'
+        }
+    }
     compileSdkVersion 23
     buildToolsVersion "23.0.2"
-
     defaultConfig {
         applicationId "net.paulacr.githubrepo"
         minSdkVersion 15
         targetSdkVersion 23
-        versionCode 1
-        versionName "1.0"
+        versionCode 2
+        versionName "1.0.1"
     }
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
         }
     }
 }
@@ -26,7 +34,7 @@ dependencies {
     compile 'com.android.support:design:23.2.1'
     compile 'com.squareup.retrofit2:retrofit:2.0.0-beta4'
     compile 'com.squareup.retrofit2:converter-gson:2.0.0-beta4'
-    compile ('com.squareup.retrofit2:retrofit:2.0.0-beta4') {
+    compile('com.squareup.retrofit2:retrofit:2.0.0-beta4') {
         exclude module: 'okhttp'
     }
     compile 'com.jakewharton:butterknife:7.0.1'
@@ -34,5 +42,4 @@ dependencies {
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'com.android.support:cardview-v7:23.2.1'
     compile 'com.android.support:recyclerview-v7:23.2.1'
-
 }

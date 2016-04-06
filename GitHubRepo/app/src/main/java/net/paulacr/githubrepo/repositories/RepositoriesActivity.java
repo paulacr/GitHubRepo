@@ -78,11 +78,17 @@ public class RepositoriesActivity extends AppCompatActivity
         setContentView(R.layout.repositories_activity);
 
         ButterKnife.bind(this);
-        setupViews();
         navigationView.setNavigationItemSelectedListener(this);
 
         //create the presenter or start service for request
         presenter = new RepositoriesPresenter(this);
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
         showLoadingView(true);
         if(NetworkConnectionVerifier.isConnected(this)) {
             presenter.searchRepositories(initialPage);
@@ -90,7 +96,12 @@ public class RepositoriesActivity extends AppCompatActivity
             showLoadingView(false);
             generateSnackBar(getString(R.string.error_network_connection), getString(R.string.action_try_again));
         }
+    }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        setupViews();
     }
 
     @Override

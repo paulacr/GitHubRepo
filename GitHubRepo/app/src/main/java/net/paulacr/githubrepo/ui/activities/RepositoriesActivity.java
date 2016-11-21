@@ -61,7 +61,7 @@ public class RepositoriesActivity extends BaseActivity
     Call<Repositories> repositoriesResponse;
 
     //**************************************************************************
-    // Bind Views
+    // Find Views
     //**************************************************************************
     @ViewById(R.id.listRepo)
     RecyclerView repositoryList;

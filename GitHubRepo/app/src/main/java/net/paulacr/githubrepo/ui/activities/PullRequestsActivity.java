@@ -27,7 +27,7 @@ public class PullRequestsActivity extends BaseActivity {
     private List<PullRequests> pullRequestsItems;
 
     //**************************************************************************
-    // Bind Views
+    // Find Views
     //**************************************************************************
 
     @ViewById(R.id.listPullRequest)

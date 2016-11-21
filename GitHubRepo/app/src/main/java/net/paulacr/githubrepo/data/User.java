@@ -2,9 +2,6 @@ package net.paulacr.githubrepo.data;
 
 import com.google.gson.annotations.SerializedName;
 
-/**
- * Created by paularosa on 3/31/16.
- */
 public class User {
 
     @SerializedName("id")

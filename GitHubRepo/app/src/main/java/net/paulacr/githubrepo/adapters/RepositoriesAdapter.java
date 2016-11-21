@@ -1,4 +1,4 @@
-package net.paulacr.githubrepo.repositories;
+package net.paulacr.githubrepo.adapters;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -19,9 +19,6 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
 
-/**
- * Created by paularosa on 3/31/16.
- */
 public class RepositoriesAdapter extends RecyclerView.Adapter<RepositoriesAdapter.ViewHolder> {
 
     private List<Item> itemList;

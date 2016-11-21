@@ -1,4 +1,4 @@
-package net.paulacr.githubrepo.pullrequests;
+package net.paulacr.githubrepo.adapters;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;

@@ -1,11 +1,11 @@
 package net.paulacr.githubrepo.data;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.SerializedName;
 
-/**
- * Created by paularosa on 3/31/16.
- */
-public class Item {
+public class Item implements Parcelable {
 
     @SerializedName("id")
     private long id;
@@ -19,6 +19,26 @@ public class Item {
     private long starsCount;
     @SerializedName("owner")
     private Owner owner;
+
+    protected Item(Parcel in) {
+        id = in.readLong();
+        name = in.readString();
+        description = in.readString();
+        forksCount = in.readLong();
+        starsCount = in.readLong();
+    }
+
+    public static final Creator<Item> CREATOR = new Creator<Item>() {
+        @Override
+        public Item createFromParcel(Parcel in) {
+            return new Item(in);
+        }
+
+        @Override
+        public Item[] newArray(int size) {
+            return new Item[size];
+        }
+    };
 
     public long getId() {
         return id;
@@ -40,31 +60,29 @@ public class Item {
         return owner;
     }
 
-    public void setOwner(Owner owner) {
-        this.owner = owner;
-    }
-
     public long getForksCount() {
         return forksCount;
-    }
-
-    public void setForksCount(long forksCount) {
-        this.forksCount = forksCount;
     }
 
     public long getStarsCount() {
         return starsCount;
     }
 
-    public void setStarsCount(long starsCount) {
-        this.starsCount = starsCount;
-    }
-
     public String getDescription() {
         return description;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeLong(id);
+        dest.writeString(name);
+        dest.writeString(description);
+        dest.writeLong(forksCount);
+        dest.writeLong(starsCount);
     }
 }

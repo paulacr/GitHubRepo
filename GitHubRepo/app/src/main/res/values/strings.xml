@@ -10,6 +10,11 @@
     <string name="error_request">Error connecting to the server</string>
     <string name="action_try_again">Try again</string>
 
-    <string name="dialog_title">Please wait...</string>
+    <string name="dialog_title">Aguarde</string>
     <string name="dialog_message">Searching for repositories</string>
+
+    <!-- Preferences Keys -->
+    <string name="last_service_call_key">last_service_call_key</string>
+    <string name="no_prefs">no_prefs</string>
+
 </resources>

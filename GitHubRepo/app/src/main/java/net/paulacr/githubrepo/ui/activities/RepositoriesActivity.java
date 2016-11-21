@@ -1,101 +1,113 @@
-package net.paulacr.githubrepo.repositories;
+package net.paulacr.githubrepo.ui.activities;
 
 import android.app.ProgressDialog;
-import android.content.BroadcastReceiver;
-import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
 import net.paulacr.githubrepo.R;
+import net.paulacr.githubrepo.controller.RepositoriesController;
 import net.paulacr.githubrepo.data.Item;
 import net.paulacr.githubrepo.data.Repositories;
-import net.paulacr.githubrepo.data.RepositoriesList;
-import net.paulacr.githubrepo.pullrequests.PullRequestsFragment;
+import net.paulacr.githubrepo.network.GitHubService;
+import net.paulacr.githubrepo.repositories.OnScrollMore;
+import net.paulacr.githubrepo.repositories.OnScrollMoreListener;
+import net.paulacr.githubrepo.adapters.RepositoriesAdapter;
 import net.paulacr.githubrepo.utils.DividerItemDecorator;
+import net.paulacr.githubrepo.utils.MessageEvents;
 import net.paulacr.githubrepo.utils.NetworkConnectionReceiver;
 import net.paulacr.githubrepo.utils.NetworkConnectionVerifier;
 import net.paulacr.githubrepo.utils.OnListItemClick;
 import net.paulacr.githubrepo.utils.OnReceiverNetworkStatus;
 
+import org.androidannotations.annotations.AfterViews;
+import org.androidannotations.annotations.Bean;
+import org.androidannotations.annotations.EActivity;
+import org.androidannotations.annotations.ViewById;
+import org.greenrobot.eventbus.Subscribe;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.Bind;
-import butterknife.ButterKnife;
+import retrofit2.Call;
 
-public class RepositoriesActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, RepositoriesContract.View,
-                    OnScrollMore, OnListItemClick, OnReceiverNetworkStatus {
+@EActivity(R.layout.activity_repositories)
+public class RepositoriesActivity extends BaseActivity
+        implements NavigationView.OnNavigationItemSelectedListener,
+        OnScrollMore, OnListItemClick, OnReceiverNetworkStatus {
 
-    private List<Item> itemList;
+    private static final String REPOSITORIES_LIST = "repositories_list";
+
+    private ArrayList<Item> itemList;
     private RepositoriesAdapter adapter;
     private ProgressDialog progressBar;
-    private int initialPage = 1;
     private boolean hasMorePages;
-    private RepositoriesPresenter presenter;
     private int page;
     private NetworkConnectionReceiver receiver;
     private boolean hasRequestError = false;
+    private GitHubService service;
+    Call<Repositories> repositoriesResponse;
 
     //**************************************************************************
     // Bind Views
     //**************************************************************************
-    @Bind(R.id.listRepo)
+    @ViewById(R.id.listRepo)
     RecyclerView repositoryList;
-    @Bind(R.id.toolbar)
+
+    @ViewById(R.id.toolbar)
     Toolbar toolbar;
-    @Bind(R.id.fab)
+
+    @ViewById(R.id.fab)
     FloatingActionButton fab;
-    @Bind(R.id.drawer_layout)
+
+    @ViewById(R.id.drawer_layout)
     DrawerLayout drawerLayout;
-    @Bind(R.id.nav_view)
+
+    @ViewById(R.id.nav_view)
     NavigationView navigationView;
+
+    @Bean
+    RepositoriesController controller;
 
     //**************************************************************************
     // LifeCycle
     //**************************************************************************
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.repositories_activity);
-
-        ButterKnife.bind(this);
-        navigationView.setNavigationItemSelectedListener(this);
-
-        //create the presenter or start service for request
-        presenter = new RepositoriesPresenter(this);
-
-    }
 
     @Override
     protected void onResume() {
         super.onResume();
 
-        showLoadingView(true);
-        if(NetworkConnectionVerifier.isConnected(this)) {
-            presenter.searchRepositories(initialPage);
+        if(itemList == null || itemList.isEmpty()) {
+            searchRepositoriesList();
         } else {
-            showLoadingView(false);
-            generateSnackBar(getString(R.string.error_network_connection), getString(R.string.action_try_again));
+            createRepositoryList();
+            adapter.notifyItemRangeChanged(adapter.getItemCount(), itemList.size() - 1);
         }
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        if(savedInstanceState != null) {
+            itemList = savedInstanceState.getParcelableArrayList(REPOSITORIES_LIST);
+        } else {
+            itemList = new ArrayList<>();
+        }
+        //navigationView.setNavigationItemSelectedListener(this);
     }
 
     @Override
@@ -136,6 +148,12 @@ public class RepositoriesActivity extends AppCompatActivity
         }
     }
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelableArrayList(REPOSITORIES_LIST, itemList);
+    }
+
     //**************************************************************************
     // Setup Views
     //**************************************************************************
@@ -145,7 +163,6 @@ public class RepositoriesActivity extends AppCompatActivity
         setupActionBar();
         setupNetworkReceiver();
         createRepositoryList();
-
     }
 
     private void setupToolBar() {
@@ -168,8 +185,6 @@ public class RepositoriesActivity extends AppCompatActivity
     }
 
     private void createRepositoryList() {
-        itemList = new ArrayList<>();
-
         LinearLayoutManager manager = new LinearLayoutManager(this);
         OnScrollMoreListener endlessScroll = new OnScrollMoreListener(manager);
         endlessScroll.setListener(this);
@@ -194,80 +209,25 @@ public class RepositoriesActivity extends AppCompatActivity
         return true;
     }
 
-    //**************************************************************************
-    // Ui methods
-    //**************************************************************************
-
-    @Override
-    public void showRepositories(Repositories repositories) {
-
-        try {
-
-            RepositoriesList.getInstance().getRepositories().getItems();
-            RepositoriesList.getInstance().getRepositories().getItems().addAll(repositories.getItems());
-
-        } catch (NullPointerException e) {
-            e.printStackTrace();
-            RepositoriesList.getInstance().setRepositories(repositories);
-        }
-
-        //Populate the items
-        itemList.addAll(repositories.getItems());
-        adapter.notifyItemRangeChanged(adapter.getItemCount(), itemList.size() - 1);
-        setHasMorePages(repositories);
-        hasRequestError = false;
-    }
-
-    @Override
-    public void showError(String error) {
-        generateSnackBar(getString(R.string.error_request), getString(R.string.action_try_again));
-        hasRequestError = true;
-    }
-
-    @Override
-    public void showLoadingView(boolean show) {
-        if(progressBar == null) {
-            progressBar = new ProgressDialog(this);
-        }
-
-        if(show) {
-            progressBar.setTitle(getString(R.string.dialog_title));
-            progressBar.setMessage(getString(R.string.dialog_message));
-            progressBar.show();
-        } else {
-            progressBar.dismiss();
-        }
-    }
-
-    @Override
-    public void retry() {
-        if(NetworkConnectionVerifier.isConnected(this)) {
-            presenter.searchRepositories(getPage());
-        } else {
-            showLoadingView(false);
-            generateSnackBar(getString(R.string.error_network_connection),getString(R.string.action_try_again));
-        }
-
-    }
-
-    @Override
-    public void changeFragment(android.support.v4.app.Fragment fragment, String TAG) {
-
-        FragmentManager manager = getSupportFragmentManager();
-        FragmentTransaction transaction = manager.beginTransaction();
-        transaction.add(R.id.container, fragment, TAG);
-        transaction.addToBackStack(TAG);
-        transaction.commit();
-    }
+//    @Override
+//    public void retry() {
+//        if(NetworkConnectionVerifier.isConnected(this)) {
+//            presenter.searchRepositories(getPage());
+//        } else {
+//            showLoadingView(false);
+//            generateSnackBar(getString(R.string.error_network_connection),getString(R.string.action_try_again));
+//        }
+//
+//    }
 
     private void generateSnackBar(String message, String action) {
         Snackbar.make(repositoryList, message, Snackbar.LENGTH_LONG)
                 .setAction(action, new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                retry();
-            }
-        }).show();
+                    @Override
+                    public void onClick(View v) {
+                        //retry();
+                    }
+                }).show();
     }
 
 
@@ -280,7 +240,7 @@ public class RepositoriesActivity extends AppCompatActivity
     }
 
     private void setHasMorePages(Repositories repositories) {
-        if(repositories.getTotalCount() != repositories.getItems().size() ||
+        if (repositories.getTotalCount() != repositories.getItems().size() ||
                 repositories.getItems() != null) {
             hasMorePages = true;
         } else {
@@ -299,31 +259,52 @@ public class RepositoriesActivity extends AppCompatActivity
 
     @Override
     public void onScrollMorePages(int page) {
-        if(hasMorePages()) {
+        if (hasMorePages()) {
             setPage(page);
-            presenter.searchRepositories(getPage());
+            showProgressDialog();
+            controller.searchRepositoriesList("Java", "stars", String.valueOf(getPage()));
         }
     }
 
     @Override
     public void onListItemClicked(int position) {
 
-        Item item = RepositoriesList.getInstance().getRepositories().getItems().get(position);
+        Item item = itemList.get(position);
 
         String userName = item.getOwner().getLogin();
         String repoName = item.getName();
 
-        PullRequestsFragment fragment = PullRequestsFragment.newInstance(userName, repoName);
-        String tag = PullRequestsFragment.TAG;
-
-        changeFragment(fragment, tag);
+        PullRequestsActivity_
+                .intent(this)
+                .user(userName)
+                .repoName(repoName)
+                .start();
     }
 
     @Override
     public void onReceive(boolean isConnected) {
-        if(hasRequestError) {
-            presenter.searchRepositories(getPage());
+        if (hasRequestError) {
         }
-
     }
+
+    @Subscribe
+    public void onEventMainThread(MessageEvents.ResponseRepositories event) {
+
+        if (event.getRepositories().getItems() != null) {
+            itemList.addAll(event.getRepositories().getItems());
+            adapter.notifyItemRangeChanged(adapter.getItemCount(), itemList.size() - 1);
+            setHasMorePages(event.getRepositories());
+            hasRequestError = false;
+        }
+        dismissProgressDialog();
+    }
+
+    private void searchRepositoriesList() {
+        if (NetworkConnectionVerifier.isConnected(this)) {
+            showProgressDialog();
+            controller.searchRepositoriesList("Java", "starts", String.valueOf(getPage()));
+        }
+    }
+
+
 }

@@ -4,9 +4,6 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-/**
- * Created by paularosa on 3/31/16.
- */
 public class Repositories {
 
     @SerializedName("total_count")

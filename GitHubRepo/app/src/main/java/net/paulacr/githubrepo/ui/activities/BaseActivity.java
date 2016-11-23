@@ -4,15 +4,11 @@ import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.widget.Toast;
 
 import net.paulacr.githubrepo.R;
-import net.paulacr.githubrepo.utils.MessageEvents;
 
 import org.androidannotations.annotations.EActivity;
 import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 
 @EActivity
 public class BaseActivity extends AppCompatActivity {
@@ -40,19 +36,15 @@ public class BaseActivity extends AppCompatActivity {
         }
     }
 
-    /**
-     * EventBus deve registrar a activity ao iniciar, e desregistrar ao encerrar.
-     */
     @Override
-    protected void onStart() {
+    public void onStart() {
         super.onStart();
         bus.register(this);
     }
 
     @Override
-    protected void onStop() {
+    public void onStop() {
         bus.unregister(this);
         super.onStop();
     }
-
 }

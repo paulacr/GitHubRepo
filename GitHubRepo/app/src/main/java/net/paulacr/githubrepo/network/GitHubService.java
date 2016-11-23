@@ -10,9 +10,6 @@ import retrofit2.http.GET;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 
-/**
- * Created by paularosa on 3/31/16.
- */
 public interface GitHubService {
 
     String ENDPOINT_REPOSITORY = "search/repositories";

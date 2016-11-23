@@ -5,10 +5,6 @@ import net.paulacr.githubrepo.data.Repositories;
 
 import java.util.List;
 
-/**
- * Created by paularosa on 20/11/16.
- */
-
 public class MessageEvents {
 
     public static class ResponseRepositories {

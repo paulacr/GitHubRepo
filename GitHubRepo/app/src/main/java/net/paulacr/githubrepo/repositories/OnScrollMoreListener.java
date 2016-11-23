@@ -4,9 +4,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 
-/**
- * Created by paularosa on 4/1/16.
- */
 public class OnScrollMoreListener extends RecyclerView.OnScrollListener {
 
     private int previousTotal = 0;

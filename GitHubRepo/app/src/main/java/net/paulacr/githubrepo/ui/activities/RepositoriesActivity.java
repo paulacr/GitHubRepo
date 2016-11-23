@@ -1,6 +1,5 @@
 package net.paulacr.githubrepo.ui.activities;
 
-import android.app.ProgressDialog;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
@@ -21,44 +20,35 @@ import net.paulacr.githubrepo.R;
 import net.paulacr.githubrepo.controller.RepositoriesController;
 import net.paulacr.githubrepo.data.Item;
 import net.paulacr.githubrepo.data.Repositories;
-import net.paulacr.githubrepo.network.GitHubService;
 import net.paulacr.githubrepo.repositories.OnScrollMore;
 import net.paulacr.githubrepo.repositories.OnScrollMoreListener;
 import net.paulacr.githubrepo.adapters.RepositoriesAdapter;
-import net.paulacr.githubrepo.utils.DividerItemDecorator;
+import net.paulacr.githubrepo.utils.RecyclerviewDividerItemDecorator;
 import net.paulacr.githubrepo.utils.MessageEvents;
 import net.paulacr.githubrepo.utils.NetworkConnectionReceiver;
 import net.paulacr.githubrepo.utils.NetworkConnectionVerifier;
 import net.paulacr.githubrepo.utils.OnListItemClick;
 import net.paulacr.githubrepo.utils.OnReceiverNetworkStatus;
 
-import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.ViewById;
 import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
-import java.util.List;
-
-import retrofit2.Call;
 
 @EActivity(R.layout.activity_repositories)
-public class RepositoriesActivity extends BaseActivity
-        implements NavigationView.OnNavigationItemSelectedListener,
-        OnScrollMore, OnListItemClick, OnReceiverNetworkStatus {
+public class RepositoriesActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener, OnScrollMore, OnListItemClick,
+            OnReceiverNetworkStatus {
 
     private static final String REPOSITORIES_LIST = "repositories_list";
 
     private ArrayList<Item> itemList;
     private RepositoriesAdapter adapter;
-    private ProgressDialog progressBar;
     private boolean hasMorePages;
     private int page;
     private NetworkConnectionReceiver receiver;
     private boolean hasRequestError = false;
-    private GitHubService service;
-    Call<Repositories> repositoriesResponse;
 
     //**************************************************************************
     // Find Views
@@ -111,13 +101,13 @@ public class RepositoriesActivity extends BaseActivity
     }
 
     @Override
-    protected void onStart() {
+    public void onStart() {
         super.onStart();
         setupViews();
     }
 
     @Override
-    protected void onStop() {
+    public void onStop() {
         super.onStop();
         unregisterReceiver(receiver);
     }
@@ -194,7 +184,7 @@ public class RepositoriesActivity extends BaseActivity
 
         repositoryList.setLayoutManager(manager);
         repositoryList.addOnScrollListener(endlessScroll);
-        repositoryList.addItemDecoration(new DividerItemDecorator(this, DividerItemDecorator.VERTICAL_LIST));
+        repositoryList.addItemDecoration(new RecyclerviewDividerItemDecorator(this, RecyclerviewDividerItemDecorator.VERTICAL_LIST));
         repositoryList.setAdapter(adapter);
     }
 

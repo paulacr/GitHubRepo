@@ -9,10 +9,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
-/**
- * Created by paularosa on 3/26/16.
- */
-public class DividerItemDecorator extends RecyclerView.ItemDecoration {
+public class RecyclerviewDividerItemDecorator extends RecyclerView.ItemDecoration {
 
     private static final int[] ATTRS = new int[]{
             android.R.attr.listDivider
@@ -26,7 +23,7 @@ public class DividerItemDecorator extends RecyclerView.ItemDecoration {
 
     private int mOrientation;
 
-    public DividerItemDecorator(Context context, int orientation) {
+    public RecyclerviewDividerItemDecorator(Context context, int orientation) {
         final TypedArray a = context.obtainStyledAttributes(ATTRS);
         mDivider = a.getDrawable(0);
         a.recycle();

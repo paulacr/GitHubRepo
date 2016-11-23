@@ -7,9 +7,6 @@ import net.paulacr.githubrepo.R;
 
 import java.util.Date;
 
-/**
- * Created by paularosa on 4/6/16.
- */
 public class SharedPreferencesManager {
 
     private static SharedPreferences preferences;

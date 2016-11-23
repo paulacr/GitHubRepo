@@ -18,9 +18,6 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
 
-/**
- * Created by paularosa on 4/2/16.
- */
 public class PullRequestsAdapter  extends RecyclerView.Adapter<PullRequestsAdapter.ViewHolder> {
 
 

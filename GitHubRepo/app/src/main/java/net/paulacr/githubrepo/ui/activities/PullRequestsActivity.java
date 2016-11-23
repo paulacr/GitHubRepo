@@ -7,7 +7,7 @@ import net.paulacr.githubrepo.R;
 import net.paulacr.githubrepo.adapters.PullRequestsAdapter;
 import net.paulacr.githubrepo.controller.PullRequestsController;
 import net.paulacr.githubrepo.data.PullRequests;
-import net.paulacr.githubrepo.utils.DividerItemDecorator;
+import net.paulacr.githubrepo.utils.RecyclerviewDividerItemDecorator;
 import net.paulacr.githubrepo.utils.MessageEvents;
 
 import org.androidannotations.annotations.AfterViews;
@@ -61,7 +61,7 @@ public class PullRequestsActivity extends BaseActivity {
         adapter = new PullRequestsAdapter(this, pullRequestsItems);
 
         listPullRequest.setLayoutManager(manager);
-        listPullRequest.addItemDecoration(new DividerItemDecorator(this, DividerItemDecorator.VERTICAL_LIST));
+        listPullRequest.addItemDecoration(new RecyclerviewDividerItemDecorator(this, RecyclerviewDividerItemDecorator.VERTICAL_LIST));
         listPullRequest.setAdapter(adapter);
     }
 

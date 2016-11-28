@@ -14,14 +14,13 @@ import org.greenrobot.eventbus.EventBus;
 public class BaseActivity extends AppCompatActivity {
 
     private EventBus bus;
+    private ProgressDialog dialog;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         bus = EventBus.getDefault();
     }
-
-    private ProgressDialog dialog;
 
     public void showProgressDialog() {
         dialog = new ProgressDialog(this);
@@ -39,12 +38,10 @@ public class BaseActivity extends AppCompatActivity {
     @Override
     public void onStart() {
         super.onStart();
-        bus.register(this);
     }
 
     @Override
     public void onStop() {
-        bus.unregister(this);
         super.onStop();
     }
 }

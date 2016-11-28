@@ -20,8 +20,7 @@ import net.paulacr.githubrepo.R;
 import net.paulacr.githubrepo.controller.RepositoriesController;
 import net.paulacr.githubrepo.data.Item;
 import net.paulacr.githubrepo.data.Repositories;
-import net.paulacr.githubrepo.repositories.OnScrollMore;
-import net.paulacr.githubrepo.repositories.OnScrollMoreListener;
+import net.paulacr.githubrepo.utils.OnScrollMoreListener;
 import net.paulacr.githubrepo.adapters.RepositoriesAdapter;
 import net.paulacr.githubrepo.utils.RecyclerviewDividerItemDecorator;
 import net.paulacr.githubrepo.utils.MessageEvents;
@@ -38,7 +37,8 @@ import org.greenrobot.eventbus.Subscribe;
 import java.util.ArrayList;
 
 @EActivity(R.layout.activity_repositories)
-public class RepositoriesActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener, OnScrollMore, OnListItemClick,
+public class RepositoriesActivitys extends BaseActivity implements
+        NavigationView.OnNavigationItemSelectedListener, OnScrollMoreListener.OnScrollMore, OnListItemClick,
             OnReceiverNetworkStatus {
 
     private static final String REPOSITORIES_LIST = "repositories_list";
@@ -53,7 +53,7 @@ public class RepositoriesActivity extends BaseActivity implements NavigationView
     //**************************************************************************
     // Find Views
     //**************************************************************************
-    @ViewById(R.id.listRepo)
+    @ViewById(R.id.list_repo)
     RecyclerView repositoryList;
 
     @ViewById(R.id.toolbar)

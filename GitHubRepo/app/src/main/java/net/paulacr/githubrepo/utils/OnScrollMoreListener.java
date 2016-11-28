@@ -1,4 +1,4 @@
-package net.paulacr.githubrepo.repositories;
+package net.paulacr.githubrepo.utils;
 
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -13,6 +13,12 @@ public class OnScrollMoreListener extends RecyclerView.OnScrollListener {
     int firstVisibleItem, visibleItemCount, totalItemCount;
     private LinearLayoutManager linearLayoutManager;
     private OnScrollMore listener;
+
+    public interface OnScrollMore {
+
+        void onScrollMorePages(int page);
+    }
+
 
     public OnScrollMoreListener(LinearLayoutManager linearLayoutManager) {
         this.linearLayoutManager = linearLayoutManager;

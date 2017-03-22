@@ -1,0 +1,20 @@
+<resources>
+    <string name="app_name">GitHubRepo</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+
+    <string name="error_network_connection">Error connecting to the internet</string>
+    <string name="error_request">Error connecting to the server</string>
+    <string name="action_try_again">Try again</string>
+
+    <string name="dialog_title">Aguarde</string>
+    <string name="dialog_message">Searching for repositories</string>
+
+    <!-- Preferences Keys -->
+    <string name="last_service_call_key">last_service_call_key</string>
+    <string name="no_prefs">no_prefs</string>
+
+</resources>

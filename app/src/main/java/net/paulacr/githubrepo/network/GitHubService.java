@@ -1,7 +1,7 @@
 package net.paulacr.githubrepo.network;
 
-import net.paulacr.githubrepo.data.PullRequests;
-import net.paulacr.githubrepo.data.Repositories;
+import net.paulacr.githubrepo.pullrequests.PullRequests;
+import net.paulacr.githubrepo.repositories.model.Repositories;
 
 import java.util.List;
 

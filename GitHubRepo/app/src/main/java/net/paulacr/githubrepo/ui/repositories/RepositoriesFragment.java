@@ -14,7 +14,7 @@ import net.paulacr.githubrepo.R;
 import net.paulacr.githubrepo.adapters.RepositoriesAdapter;
 import net.paulacr.githubrepo.data.Item;
 import net.paulacr.githubrepo.data.Repositories;
-import net.paulacr.githubrepo.ui.base.BaseFragment;
+import net.paulacr.githubrepo.base.BaseFragment;
 import net.paulacr.githubrepo.utils.OnScrollMoreListener;
 import net.paulacr.githubrepo.utils.RecyclerviewDividerItemDecorator;
 

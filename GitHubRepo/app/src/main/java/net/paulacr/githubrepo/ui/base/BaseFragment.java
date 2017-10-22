@@ -1,4 +1,4 @@
-package net.paulacr.githubrepo.ui.base;
+package net.paulacr.githubrepo.base;
 
 import android.app.ProgressDialog;
 import android.support.v4.app.Fragment;

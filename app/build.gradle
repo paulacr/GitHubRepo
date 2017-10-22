@@ -1,5 +1,4 @@
 apply plugin: 'com.android.application'
-apply plugin: 'android-apt'
 
 android {
     signingConfigs {
@@ -11,7 +10,7 @@ android {
         }
     }
     compileSdkVersion 23
-    buildToolsVersion "23.0.2"
+    buildToolsVersion '26.0.2'
     defaultConfig {
         applicationId "net.paulacr.githubrepo"
         minSdkVersion 15
@@ -29,7 +28,6 @@ android {
 }
 
 dependencies {
-    apt "org.androidannotations:androidannotations:4.1.0"
     compile "org.androidannotations:androidannotations-api:4.1.0"
     compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.12'
@@ -40,10 +38,10 @@ dependencies {
     compile('com.squareup.retrofit2:retrofit:2.0.0-beta4') {
         exclude module: 'okhttp'
     }
-    compile 'com.jakewharton:butterknife:7.0.1'
     compile 'de.hdodenhof:circleimageview:2.0.0'
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'com.android.support:cardview-v7:23.2.1'
     compile 'com.android.support:recyclerview-v7:23.2.1'
     compile 'org.greenrobot:eventbus:3.0.0'
+    compile 'com.android.support.constraint:constraint-layout:1.0.2'
 }

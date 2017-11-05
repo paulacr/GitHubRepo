@@ -31,5 +31,18 @@ public class MessageEvents {
         }
     }
 
+    public static class OnRequestError {
+
+        private String message;
+
+        public OnRequestError(String message) {
+            this.message = message;
+        }
+
+        public String getMessage() {
+            return message;
+        }
+    }
+
 
 }

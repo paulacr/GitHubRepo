@@ -31,4 +31,6 @@
   <com.crashlytics.sdk.android/>
   <io.fabric.sdk.android/>
   <android.arch.persistence/>
+  <com.google.android.wearable/>
+  <com.google.android.support/>
 </metadata>

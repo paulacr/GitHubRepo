@@ -39,6 +39,6 @@ public class Repositories {
     }
 
     public void setItems(List<Item> items) {
-        this.items = items;
+        items.addAll(items);
     }
 }

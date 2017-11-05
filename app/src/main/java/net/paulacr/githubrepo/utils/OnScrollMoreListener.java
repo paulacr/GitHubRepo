@@ -58,4 +58,8 @@ public class OnScrollMoreListener extends RecyclerView.OnScrollListener {
 
 
     }
+
+    public void invalidatePageCount() {
+        currentPage--;
+    }
 }

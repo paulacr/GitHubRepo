@@ -85,4 +85,9 @@ public class Item implements Parcelable {
         dest.writeLong(forksCount);
         dest.writeLong(starsCount);
     }
+
+    @Override
+    public String toString() {
+        return "name: " + name;
+    }
 }

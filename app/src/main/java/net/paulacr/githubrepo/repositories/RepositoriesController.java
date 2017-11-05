@@ -28,7 +28,7 @@ public class RepositoriesController extends BaseController {
 
             @Override
             public void onFailure(Call<Repositories> call, Throwable t) {
-
+                post(new MessageEvents.OnRequestError(t.getMessage()));
             }
         });
     }

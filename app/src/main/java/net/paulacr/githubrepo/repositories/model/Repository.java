@@ -25,6 +25,7 @@ public class Repository {
 
     public void setRepositories(Repositories repositories) {
         this.repositories = repositories;
+        repositories.setItems(repositories.getItems());
     }
 
     public long getCurrentPage() {

@@ -18,6 +18,7 @@ public class RestApi {
             retrofit = new Retrofit.Builder()
                     .baseUrl(BASE_URL)
                     .addConverterFactory(GsonConverterFactory.create())
+                    .client(new  Logging().log())
                     .build();
 
             gitHubService = retrofit.create(GitHubService.class);

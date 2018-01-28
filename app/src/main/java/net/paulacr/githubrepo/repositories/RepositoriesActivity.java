@@ -7,10 +7,10 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
-import android.widget.FrameLayout;
 
 import net.paulacr.githubrepo.R;
 import net.paulacr.githubrepo.base.BaseActivity;
+import net.paulacr.githubrepo.pullrequests.PullRequestsActivity;
 import net.paulacr.githubrepo.repositories.model.Item;
 import net.paulacr.githubrepo.repositories.model.Repository;
 import net.paulacr.githubrepo.utils.MessageEvents;
@@ -30,11 +30,13 @@ public class RepositoriesActivity extends BaseActivity implements OnScrollMoreLi
 
     private RepositoriesAdapter adapter;
     private RecyclerView listRepo;
+    LinearLayoutManager manager;
 
     private RepositoriesController controller = new RepositoriesController();
     private OnScrollMoreListener endlessScroll;
     private String currentPage;
     private ArrayList<Item> items;
+    private int listPositionToRestore;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -49,28 +51,11 @@ public class RepositoriesActivity extends BaseActivity implements OnScrollMoreLi
             createNewItemsList();
     }
 
-    private void createNewItemsList() {
-        items = new ArrayList<>();
-    }
-
-    private void getRestoredItemsList(@Nullable Bundle savedInstanceState) {
-        assert savedInstanceState != null;
-        items = savedInstanceState.getParcelableArrayList(EXTRA_LIST_ITEMS);
-    }
-
-    private boolean hasExtraListItems(@Nullable Bundle savedInstanceState) {
-        if (savedInstanceState == null) {
-            return false;
-        }
-        return !savedInstanceState.isEmpty() &&
-                !savedInstanceState.getParcelableArrayList(EXTRA_LIST_ITEMS).isEmpty() &&
-                savedInstanceState.getParcelableArrayList(EXTRA_LIST_ITEMS).size() != 0;
-    }
-
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putParcelableArrayList(EXTRA_LIST_ITEMS, items);
+        outState.putInt("list_position", getLastVisiblePosition());
     }
 
     @Override
@@ -86,8 +71,39 @@ public class RepositoriesActivity extends BaseActivity implements OnScrollMoreLi
         }
     }
 
+    private int getLastVisiblePosition() {
+        return ((LinearLayoutManager) listRepo.getLayoutManager())
+                .findFirstCompletelyVisibleItemPosition();
+    }
+
+    private void createNewItemsList() {
+        items = new ArrayList<>();
+    }
+
     private void findViews() {
         listRepo = (RecyclerView) findViewById(R.id.listrepo);
+    }
+
+    private void getRestoredItemsList(@Nullable Bundle savedInstanceState) {
+        assert savedInstanceState != null;
+        items = savedInstanceState.getParcelableArrayList(EXTRA_LIST_ITEMS);
+        listPositionToRestore = savedInstanceState.getInt("list_position");
+
+        moveCursorToPosition(listPositionToRestore);
+    }
+
+    private void moveCursorToPosition(int listPositionToRestore) {
+        createList();
+        manager.scrollToPositionWithOffset(listPositionToRestore, 0 );
+    }
+
+    private boolean hasExtraListItems(@Nullable Bundle savedInstanceState) {
+        if (savedInstanceState == null) {
+            return false;
+        }
+        return !savedInstanceState.isEmpty() &&
+                !savedInstanceState.getParcelableArrayList(EXTRA_LIST_ITEMS).isEmpty() &&
+                savedInstanceState.getParcelableArrayList(EXTRA_LIST_ITEMS).size() != 0;
     }
 
     public void showError(String message) {
@@ -105,7 +121,7 @@ public class RepositoriesActivity extends BaseActivity implements OnScrollMoreLi
     }
 
     public void createList() {
-        LinearLayoutManager manager = new LinearLayoutManager(this);
+        manager = new LinearLayoutManager(this);
 
         endlessScroll = new OnScrollMoreListener(manager);
         endlessScroll.setListener(this);
@@ -142,7 +158,6 @@ public class RepositoriesActivity extends BaseActivity implements OnScrollMoreLi
         }
     }
 
-    //TODO botar em método externo
     public boolean canRequestMorePages() {
         long totalCount = Repository.getInstance().getRepositories().getTotalCount();
         long listSize = Repository.getInstance().getRepositories().getItems().size();
@@ -165,7 +180,11 @@ public class RepositoriesActivity extends BaseActivity implements OnScrollMoreLi
     }
 
     @Override
-    public void onListItemClicked(Item position) {
+    public void onListItemClicked(Item item) {
+        //open the pull request for each item list
+        PullRequestsActivity.newIntent(this,
+                item.getOwner().getLogin(),
+                item.getName());
 
     }
 

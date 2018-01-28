@@ -1,10 +1,13 @@
 package net.paulacr.githubrepo.pullrequests;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.SerializedName;
 
 import net.paulacr.githubrepo.repositories.model.User;
 
-public class PullRequests {
+public class PullRequests implements Parcelable{
 
     @SerializedName("id")
     private long id;
@@ -18,6 +21,26 @@ public class PullRequests {
     private String date;
     @SerializedName("user")
     private User user;
+
+    protected PullRequests(Parcel in) {
+        id = in.readLong();
+        state = in.readString();
+        title = in.readString();
+        body = in.readString();
+        date = in.readString();
+    }
+
+    public static final Creator<PullRequests> CREATOR = new Creator<PullRequests>() {
+        @Override
+        public PullRequests createFromParcel(Parcel in) {
+            return new PullRequests(in);
+        }
+
+        @Override
+        public PullRequests[] newArray(int size) {
+            return new PullRequests[size];
+        }
+    };
 
     public long getId() {
         return id;
@@ -65,5 +88,19 @@ public class PullRequests {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeLong(id);
+        dest.writeString(state);
+        dest.writeString(title);
+        dest.writeString(body);
+        dest.writeString(date);
     }
 }

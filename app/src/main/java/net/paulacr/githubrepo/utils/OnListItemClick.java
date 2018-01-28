@@ -4,5 +4,5 @@ import net.paulacr.githubrepo.repositories.model.Item;
 
 public interface OnListItemClick {
 
-    void onListItemClicked(Item position);
+    void onListItemClicked(Item item);
 }

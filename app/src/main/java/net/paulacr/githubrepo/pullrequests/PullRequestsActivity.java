@@ -36,12 +36,11 @@ public class PullRequestsActivity extends BaseActivity {
     private RecyclerView listPullRequest;
 
 
-    private PullRequestsController controller;
+    private PullRequestsController controller = new PullRequestsController();
 
     //**************************************************************************
     // LifeCycle
     //**************************************************************************
-
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -49,7 +48,7 @@ public class PullRequestsActivity extends BaseActivity {
         setContentView(R.layout.activity_pullrequest);
 
         listPullRequest = (RecyclerView) findViewById(R.id.listPullRequest);
-        restoreExtras(savedInstanceState);
+        restoreExtras();
 
 
 
@@ -101,9 +100,11 @@ public class PullRequestsActivity extends BaseActivity {
         controller.searchPullRequestsList(user, repoName);
     }
 
-    private void restoreExtras(Bundle savedInstantState) {
-        user = savedInstantState.getString(EXTRA_USER);
-        repoName = savedInstantState.getString(EXTRA_REPO_NAME);
+    private void restoreExtras() {
+        Bundle extras = getIntent().getExtras();
+        assert extras != null;
+        user = extras.getString(EXTRA_USER);
+        repoName = extras.getString(EXTRA_REPO_NAME);
     }
 
     //**************************************************************************

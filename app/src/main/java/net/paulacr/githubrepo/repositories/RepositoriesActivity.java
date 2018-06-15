@@ -140,9 +140,9 @@ public class RepositoriesActivity extends BaseActivity implements OnScrollMoreLi
     }
 
     public void setRepositoriesList(List<Item> itemList) {
-        items.addAll(Repository.getInstance().getRepositories().getItems());
+//        items.addAll(Repository.getInstance().getRepositories().getItems());
         Log.i("log items", "->" + Repository.getInstance().getRepositories().getItems());
-        adapter.notifyItemRangeChanged(adapter.getItemCount(), items.size() - 1);
+
     }
 
     public void refreshList() {
@@ -168,8 +168,9 @@ public class RepositoriesActivity extends BaseActivity implements OnScrollMoreLi
     @Subscribe
     public void onEventMainThread(MessageEvents.ResponseRepositories repositories) {
         dismissDialog();
-        Repository.getInstance().setRepositories(repositories.getRepositories());
-        setRepositoriesList(repositories.getRepositories().getItems());
+//        Repository.getInstance().setRepositories(repositories.getRepositories());
+        items.addAll(repositories.getRepositories().getItems());
+        adapter.notifyItemRangeChanged(adapter.getItemCount(), items.size() - 1);
     }
 
     @Subscribe
